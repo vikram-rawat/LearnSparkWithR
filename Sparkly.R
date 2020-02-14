@@ -5,6 +5,8 @@ library(data.table)
 library(magrittr)
 library(ggplot2)
 library(DBI)
+library(dplyr)
+library(arrow)
 
 # set defaults ------------------------------------------------------------
 
@@ -25,3 +27,27 @@ spark <- spark_connect(master = "local",
 
 cars <- copy_to(spark, mtcars)
 
+ ## use SQL Directly
+
+spark %>% 
+  dbGetQuery("select 
+              gear,
+              am,
+              vs,
+              carb,
+              count(*) 
+             from mtcars
+             group by 
+             gear,
+             am,
+             vs,
+             carb")
+
+  ## Use Dplyr Directly
+
+cars %>% 
+  select(gear, am) %>% 
+  group_by(gear, am) %>% 
+  summarise(mn = mean(gear),
+            n()
+            )
