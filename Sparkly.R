@@ -11,6 +11,7 @@ library(inspectdf)
 library(plotluck)
 library(skimr)
 library(ggfortify)
+library(dbplot)
 
 # set defaults ------------------------------------------------------------
 
@@ -88,5 +89,32 @@ model %>%
 
 spark_log(spark)
 
-summarize_all(cars, mean)
-summarize_all(mtcars, mean)
+summarize_all(cars, mean) %>% 
+  show_query()
+
+cars %>% 
+  mutate( transmition = 
+            if_else(am == 0, "automatic", "manual")
+          ) %>% 
+  group_by(transmition) %>% 
+  summarise_all(mean)
+
+cars %>% 
+  summarise(mpg_percentile = percentile(mpg, 0.25)) %>% 
+  show_query()
+
+cars %>% 
+  summarise(mpg_percentile = sum(mpg)) %>% 
+  show_query()
+
+cars %>% 
+  summarise(mpg_percentile = 
+              percentile(mpg, 
+                         array(0.25, 0.5, 0.75)
+                         )
+            ) %>% 
+  collect()
+
+cars %>% 
+dbplot_bar(x = gear,
+           y = hp)
