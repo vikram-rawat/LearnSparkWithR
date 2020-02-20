@@ -22,7 +22,7 @@ theme_set(theme_bw())
 # use Spark ---------------------------------------------------------------
 
 spark <- spark_connect(master = "local",
-                       version = "3.0.0-preview")
+                       version = "2.4.4")
 
 # spark_available_versions()
 # spark_versions()
@@ -126,6 +126,36 @@ summarise(cars, mpg_percentile =
 ml_corr(cars) 
 
 
-correlate(cars, use = "pairwise.complete.obs", method = "pearson") %>%
+correlate(cars, 
+          use = "pairwise.complete.obs",
+          method = "pearson") %>%
   shave() %>%
   rplot()
+
+
+ggplot(aes(as.factor(cyl), mpg), data = mtcars) + geom_col()
+
+
+car_group <- cars %>%
+  group_by(cyl) %>%
+  summarise(mpg = sum(mpg, na.rm = TRUE)) %>%
+  collect() %>%
+  print()
+
+
+cars %>%
+  dbplot_histogram(mpg, binwidth = 3) +
+  labs(title = "MPG Distribution",
+       subtitle = "Histogram over miles per gallon")
+
+
+dbplot_raster(cars, mpg, wt, resolution = 16)
+
+
+cached_cars <- cars %>% 
+  mutate(cyl = paste0("cyl_", cyl)) %>%
+  compute("cached_cars")
+
+
+# spark_disconnect(spark)
+# spark_disconnect(sc)
