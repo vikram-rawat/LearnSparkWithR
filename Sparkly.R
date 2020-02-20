@@ -12,6 +12,7 @@ library(plotluck)
 library(skimr)
 library(ggfortify)
 library(dbplot)
+library(corrr)
 
 # set defaults ------------------------------------------------------------
 
@@ -115,6 +116,16 @@ cars %>%
             ) %>% 
   collect()
 
-cars %>% 
-dbplot_bar(x = gear,
-           y = hp)
+summarise(cars, mpg_percentile = 
+            percentile(mpg,
+              array(0.25, 0.5, 0.75)
+            )
+          ) %>%
+  mutate(mpg_percentile = explode(mpg_percentile))
+
+ml_corr(cars) 
+
+
+correlate(cars, use = "pairwise.complete.obs", method = "pearson") %>%
+  shave() %>%
+  rplot()
