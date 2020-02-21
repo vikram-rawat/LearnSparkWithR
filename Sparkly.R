@@ -159,3 +159,11 @@ cached_cars <- cars %>%
 
 # spark_disconnect(spark)
 # spark_disconnect(sc)
+
+download.file(
+  "https://github.com/r-spark/okcupid/raw/master/profiles.csv.zip",
+  "okcupid.zip")
+
+unzip("okcupid.zip", exdir = "data")
+unlink("okcupid.zip")
+
