@@ -19,17 +19,17 @@ class student:
     self.classn = classn
     self.subj = subj
   def get_name(self):
-    print(self.name)
+    return(self.name)
   def get_classn(self):
-    print(self.classn)
+    return(self.classn)
   def get_subj(self):
-    print(self.subj)
+    return(self.subj)
   @classmethod
   def info(cls):
     return cls.school
   @staticmethod
   def nothing():
-    print("asdfgasdf")
+    return("asdfgasdf")
 
 s1 = student("Vikram" , "B.Com" , "Finance")
 s2 = student("Manish" , "B.Tech" , "CS")
